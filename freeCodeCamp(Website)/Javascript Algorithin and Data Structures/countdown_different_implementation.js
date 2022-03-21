@@ -23,6 +23,18 @@ function countdown(n)
   return (array);
 }
 
+//Using splice to append n at the starting of array
+
+function countdown(n) {
+    if (n < 1) {
+      return [];
+    } else {
+      const arr = countdown(n - 1);
+      arr.splice(0, 0, n);
+      return arr;
+    }
+  }
+
 //Recursion & Ternary Operator Implementation
 
 function countdown(n){
