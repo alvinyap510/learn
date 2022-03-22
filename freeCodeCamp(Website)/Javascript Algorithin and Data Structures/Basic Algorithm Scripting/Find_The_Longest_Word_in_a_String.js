@@ -1,11 +1,10 @@
 function findLongestWordLength(str) {
     let regex = /\w+/g;
     let str_arr = str.match(regex);
-  
     let longest = 0;
   
     for (let i = 0; i < str_arr.length; i++) {
-      if (str_arr[i].length >= longest) {
+      if (str_arr[i].length > longest) {
         longest = str_arr[i].length;
       }
     }
