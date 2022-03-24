@@ -12,7 +12,7 @@ function smallestCommons(arr) {
       max = arr[0];
     }
   
-    for (output = 1; output <= Number.MAX_SAFE_INTEGER; output++) {
+    for (output = max; output <= Number.MAX_SAFE_INTEGER; output += max) {
       let i  = start;
       
       while (output % i === 0 && i <= max) {
