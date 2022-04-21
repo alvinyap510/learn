@@ -11,6 +11,11 @@ app.get('/', (req, res) => {
     res.render('home');
 })
 
+app.get('/random', (req, res) => {
+    let num = Math.ceil(Math.random() * 100);
+    res.render('random', { rand : num });
+})
+
 app.listen(port, () => {
     console.log("Listening port 3000");
 })
