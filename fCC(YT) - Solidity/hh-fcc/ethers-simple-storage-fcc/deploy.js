@@ -4,33 +4,37 @@ const fs = require("fs-extra");
 require("dotenv").config();
 
 async function main() {
-  const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
-  const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
-  // const encryptedJson = readFileSync("./.encryptedKey.json", "utf8");
-  // let wallet = new ethers.Wallet.fromEncryptedJsonSync(
-  //   encryptedJson,
-  //   process.env.PRIVATE_KEY_PASSWORD
-  // );
-  // wallet = await wallet.connect(provider);
-  const abi = fs.readFileSync("./SimpleStorage_sol_SimpleStorage.abi", "utf8");
-  const binary = fs.readFileSync(
-    "./SimpleStorage_sol_SimpleStorage.bin",
-    "utf8"
-  );
+	const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
+	const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
+	// const encryptedJson = readFileSync("./.encryptedKey.json", "utf8");
+	// let wallet = new ethers.Wallet.fromEncryptedJsonSync(
+	//   encryptedJson,
+	//   process.env.PRIVATE_KEY_PASSWORD
+	// );
+	// wallet = await wallet.connect(provider);
+	const abi = fs.readFileSync(
+		"./SimpleStorage_sol_SimpleStorage.abi",
+		"utf8"
+	);
+	const binary = fs.readFileSync(
+		"./SimpleStorage_sol_SimpleStorage.bin",
+		"utf8"
+	);
 
-  const contractFactory = new ethers.ContractFactory(abi, binary, wallet);
-  console.log("Deploying contract, please wait...");
-  const contract = await contractFactory.deploy();
-  const transactionReceipt = await contract.deployTransaction.wait(1);
+	const contractFactory = new ethers.ContractFactory(abi, binary, wallet);
+	console.log("Deploying contract, please wait...");
+	const contract = await contractFactory.deploy();
+	const transactionReceipt = await contract.deployTransaction.wait(1);
+	console.log("Contract Address: " + contract.address);
 
-  // console.log("Deployment Transaction: ");
-  // console.log(contract.deployTransaction);
+	// console.log("Deployment Transaction: ");
+	// console.log(contract.deployTransaction);
 
-  // console.log("Transaction Receipt: ");
-  // console.log(transactionReceipt);
+	// console.log("Transaction Receipt: ");
+	// console.log(transactionReceipt);
 
-  // Demonstraton of signing a raw transaction
-  /*
+	// Demonstraton of signing a raw transaction
+	/*
 
   console.log("Deploy with only transaction data: ");
   const tx = {
@@ -47,8 +51,8 @@ async function main() {
 
   */
 
-  // Demonstration of deployong a smart contract via sendTransaction Data
-  /*
+	// Demonstration of deployong a smart contract via sendTransaction Data
+	/*
 
   const nonce = await wallet.getTransactionCount();
   const tx = {
@@ -66,21 +70,22 @@ async function main() {
 
   */
 
-  await contract.store(5201314);
-  const currentFavoriteNumber = await contract.retrieve();
-  // console.log("Favorite Number is: " + currentFavoriteNumber);
-  // console.log(currentFavoriteNumber + "");
-  // console.log(currentFavoriteNumber.toString());
-  console.log(`Favorite Number is ${currentFavoriteNumber.toString()}`);
-  const transactionResponseStore = await contract.store("7"); //Good practice to pass numbers arguement as string
-  const transactionReceiptStore = await transactionResponseStore.wait(1);
-  const updatedFavoriteNumber = await contract.retrieve();
-  console.log(`New Favorite Number is ${updatedFavoriteNumber.toString()}`);
+	const storeTxResponse = await contract.store(5201314);
+	await storeTxResponse.wait(1);
+	const currentFavoriteNumber = await contract.retrieve();
+	// console.log("Favorite Number is: " + currentFavoriteNumber);
+	// console.log(currentFavoriteNumber + "");
+	// console.log(currentFavoriteNumber.toString());
+	console.log(`Favorite Number is ${currentFavoriteNumber.toString()}`);
+	const transactionResponseStore = await contract.store("7"); //Good practice to pass numbers arguement as string
+	const transactionReceiptStore = await transactionResponseStore.wait(1);
+	const updatedFavoriteNumber = await contract.retrieve();
+	console.log(`New Favorite Number is ${updatedFavoriteNumber.toString()}`);
 }
 
 main()
-  .then(() => process.exit(0))
-  .catch((error) => {
-    console.error(error);
-    process.exit(1);
-  });
+	.then(() => process.exit(0))
+	.catch((error) => {
+		console.error(error);
+		process.exit(1);
+	});
