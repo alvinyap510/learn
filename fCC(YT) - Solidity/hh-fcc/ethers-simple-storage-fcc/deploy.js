@@ -1,14 +1,10 @@
 const ethers = require("ethers");
 const fs = require("fs-extra");
+require("dotenv").config();
 
 async function main() {
-  const provider = new ethers.providers.JsonRpcProvider(
-    "http://127.0.0.1:7545"
-  );
-  const wallet = new ethers.Wallet(
-    "24b704faf5df54478cfbe58cc198db7ba9c6e5056c9706574f33e8bb3e7810bd",
-    provider
-  );
+  const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
+  const wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider);
   const abi = fs.readFileSync("./SimpleStorage_sol_SimpleStorage.abi", "utf8");
   const binary = fs.readFileSync(
     "./SimpleStorage_sol_SimpleStorage.bin",
@@ -62,6 +58,17 @@ async function main() {
   console.log(sentTxResponse);
 
   */
+
+  await contract.store(5201314);
+  const currentFavoriteNumber = await contract.retrieve();
+  // console.log("Favorite Number is: " + currentFavoriteNumber);
+  // console.log(currentFavoriteNumber + "");
+  // console.log(currentFavoriteNumber.toString());
+  console.log(`Favorite Number is ${currentFavoriteNumber.toString()}`);
+  const transactionResponseStore = await contract.store("7"); //Good practice to pass numbers arguement as string
+  const transactionReceiptStore = await transactionResponseStore.wait(1);
+  const updatedFavoriteNumber = await contract.retrieve();
+  console.log(`New Favorite Number is ${updatedFavoriteNumber.toString()}`);
 }
 
 main()
